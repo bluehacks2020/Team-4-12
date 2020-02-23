@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--<title>Login V11</title>
+    <meta charset="UTF-8">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--===============================================================================================-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        users = [
+        {
+            'id':'0',
+            'firstname':'Vince Harley',
+            'lastname':'Gaba',
+            'email':'vincedjgaba@yahoo.com',
+            'password':'11122345',
+            'nationality':'Filipino',
+            'gender':'male',
+            'birthdate':'October 29, 1998'
+        },
+        {
+            'id':'1',
+            'firstname':'Dayne',
+            'lastname':'Fradejas',
+            'email':'daynenfradejas@yahoo.com',
+            'password':'11122345',
+            'nationality':'Filipino',
+            'gender':'male',
+            'birthdate':'August 11, 1998'
+        },
+        {
+            'id':'2',
+            'firstname':'Lester',
+            'lastname':'Manuel',
+            'email':'lesternmanuel@yahoo.com',
+            'password':'11122345',
+            'nationality':'Filipino',
+            'gender':'male',
+            'birthdate':'January 9, 1999'
+        },
+        {
+            'id':'3',
+            'firstname':'Kyle Angelo',
+            'lastname':'Alelis',
+            'email':'kylegalelis@yahoo.com',
+            'password':'11122345',
+            'nationality':'Filipino',
+            'gender':'male',
+            'birthdate':'December 19, 1998'
+        }
+    ]
+    
+    challenges = [
+        {
+            'id':'0',
+            'title':'Mama\'s Eatery',
+            'description':'Neon Balls',
+            'picture':'',
+            'locationid':'0',
+            'adminid':'0',
+            'emblem':'',
+            'points':'4'
+        },
+        {
+            'id':'1',
+            'title':'Tabi ng Retiro',
+            'description':'Pares',
+            'picture':'',
+            'locationid':'0',
+            'adminid':'0',
+            'emblem':'',
+            'points':'3'
+        },
+        {
+            'id':'2',
+            'title':'Aling Nena\'s Kitchen',
+            'description':'Tapsilog',
+            'picture':'',
+            'locationid':'0',
+            'adminid':'0',
+            'emblem':'',
+            'points':'2'
+        },
+        {
+            'id':'3',
+            'title':'Lester\'s Kitchen',
+            'description':'Tapsilog',
+            'picture':'',
+            'locationid':'0',
+            'adminid':'0',
+            'emblem':'',
+            'points':'2'
+        },
+        {
+            'id':'4',
+            'title':'Kyle\'s Kitchen',
+            'description':'Tapsilog',
+            'picture':'',
+            'locationid':'1',
+            'adminid':'0',
+            'emblem':'',
+            'points':'2'
+        },
+        {
+            'id':'5',
+            'title':'Dayne\'s Kitchen',
+            'description':'Tapsilog',
+            'picture':'',
+            'locationid':'0',
+            'adminid':'0',
+            'emblem':'',
+            'points':'2'
+        }
+    ]
+    </script>
+</head>
+<body>
+
+    <div class="limiter">
+        <div class="container-main-user">
+            <div class="wrap-main-user p-l-15 p-r-20 p-t-12 p-b-12">
+                <div class="queue--yama">
+                    <div style='position:relative; height: 30px'>
+                        <img id="Button_Logout" class="logout-button-top-right" style='cursor: pointer;' src='./images/logout.png'>
+                    </div>
+                    <div class="queue__item">
+                            <h3 class="queue__title" id="Department">Challenge Board</h3>
+                            <p class="queue__sentence">Select Challenge</p>
+                            <p class="queue__sentence">Location: <span id='Text_Location'></span></p>
+                            <div id='challengelist' class="scrolling-action example">                        
+                         </div>
+                        <div class="container-login100-form-btn p-t-25">
+                            <div class="navbar">
+                                <a href="./Main.html" class="active">Challenges</a>
+                                <a href="#news">Rewards</a>
+                                <a href="./Account.html">Account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===============================================================================================-->
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/bootstrap/js/popper.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="js/main.js"></script>
+    <script>
+        availablechallenges = [];
+
+
+
+        var onSuccess = function (position) {
+            var loc_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&key=AIzaSyA9XHPQTUnUZR7IIDRNTfds5PhVRl-Wris";
+            $.ajax({
+                method: "GET",
+                url: loc_url,
+                dataType: "json",
+                success: function(result){
+                    $('#Text_Location').html(result.results[8].address_components[0].short_name);
+                }
+            });
+        };
+
+        // onError Callback receives a PositionError object
+        //
+        function onError(error) {
+            alert('code: ' + error.code + '\n' +
+                'message: ' + error.message + '\n');
+        }
+        
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+        currentlocation = '1';
+
+        $.ajax({
+            type: "POST",
+            url: "http://10.13.71.149/ServiceBrowser.svc/GetChallengeByLocationCategory",
+            data: JSON.stringify({
+                'CategoryID': sessionStorage.getItem('selectedcategory'),
+                'LocationID': '1'
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                challenges = result['GetChallengeByLocationCategoryResult'];
+                
+                $.each(challenges, function (index, challenge) {
+                    if (challenge.LocationID == currentlocation) {
+                        availablechallenges.push(challenge);
+                    }
+                });
+
+                $.each(availablechallenges, function (index, challenge) {
+                    appendstring = '<div class="queue__action" style="cursor:pointer;" id="Button_Foods" onclick="selectChallenge(' + challenge.ID + ');">' + challenge.Title + '</br> <a style="opacity:5;">' + challenge.Description + '</a></div>';
+                    $('#challengelist').append(appendstring);
+                });
+            },
+            error: function () {
+                alert('Login failed!');
+                $('#LineEdit_Password').val('');
+            }
+        })
+
+        function selectChallenge(id){
+            sessionStorage.setItem('selectedchallenge', id);
+            window.location.href = './Token.html';
+        }
+
+        $('#Button_Logout').click(function(){
+            sessionStorage.removeItem('session_user');
+            window.location.href = "./Login.html";
+        })
+    </script>
+
+</body>
+</html>
